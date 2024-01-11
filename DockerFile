@@ -1,0 +1,19 @@
+#!/bin/sh
+FROM eclipse-temurin:17-jdk-jammy
+ 
+WORKDIR /app
+ 
+ #copy maven wrapper pom.xml mvnw
+ 
+COPY camel/.mvn/ .mvn
+COPY camel/mvnw camel/pom.xml ./
+
+#change mvnw as executable inside the container then run dependency resolve
+RUN chmod +x mvnw
+RUN ./mvnw dependency:resolve
+ 
+COPY camel/src ./src
+
+EXPOSE 8080
+
+CMD ["./mvnw", "spring-boot:run"]
